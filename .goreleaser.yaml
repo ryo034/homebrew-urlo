@@ -43,9 +43,9 @@ changelog:
       - '^test:'
 
 brews:
-  - tap:
+  - repository:
       owner: ryo034
-      name: homebrew-urlo
+      name: urlo
       token: "{{ .Env.TAP_GITHUB_TOKEN }}"
     folder: Formula
     homepage: 'https://github.com/ryo034/homebrew-urlo'
