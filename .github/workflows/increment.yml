@@ -6,9 +6,8 @@ on:
   workflow_dispatch:
     inputs:
       semver_bump:
-        description: 'Semver version type to bump'
-        required: true
-        default: 'patch'
+        type: choice
+        description: Semver version type to bump
         options:
           - 'patch'
           - 'minor'
