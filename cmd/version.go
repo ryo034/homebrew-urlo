@@ -6,10 +6,8 @@ import (
 )
 
 var (
-	Version = "1.0.0"
+	Version = "development"
 )
-
-// go build -ldflags "-X main.Version=1.0.0" -o urlo main.go
 
 var versionCmd = &cobra.Command{
 	Use:   "version",

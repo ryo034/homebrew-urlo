@@ -11,3 +11,4 @@ data.ms
 .data
 
 data/*.csv
+dist/
