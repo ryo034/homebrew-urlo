@@ -29,7 +29,13 @@ var selectCmd = &cobra.Command{
 			return
 		}
 
-		result, _, err := util.PromptGetSelect(records.FilterByRegex(query))
+		frs, err := records.FilterByRegex(query)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		result, _, err := util.PromptGetSelect(frs)
 		if err != nil {
 			return
 		}

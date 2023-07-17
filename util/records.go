@@ -14,10 +14,43 @@ type UrlMap struct {
 	URL   *url.URL
 }
 
-type UrlMaps []UrlMap
+type UrlMaps struct {
+	values []UrlMap
+}
+
+func (us UrlMaps) Values() []UrlMap {
+	return us.values
+}
+
+func NewUrlMaps(values []UrlMap) (UrlMaps, error) {
+	titleToUrls := make(map[string][]UrlMap)
+	for _, u := range values {
+		if u.Title == "" {
+			return UrlMaps{}, fmt.Errorf("title is required")
+		}
+		if u.URL == nil {
+			return UrlMaps{}, fmt.Errorf("url is required")
+		}
+		titleToUrls[u.Title] = append(titleToUrls[u.Title], u)
+	}
+	var duplicates []DuplicatedUrlMaps
+	for title, urls := range titleToUrls {
+		if len(urls) > 1 {
+			duplicates = append(duplicates, DuplicatedUrlMaps{Title: title, Values: UrlMaps{values: urls}})
+		}
+	}
+	if len(duplicates) > 0 {
+		return UrlMaps{}, NewDuplicationError(duplicates)
+	}
+	return UrlMaps{values: values}, nil
+}
+
+func (us UrlMaps) Delete(idx int) UrlMaps {
+	return UrlMaps{values: append(us.values[:idx], us.values[idx+1:]...)}
+}
 
 func (us UrlMaps) IsAlreadyExist(title string) bool {
-	for _, item := range us {
+	for _, item := range us.values {
 		if item.Title == title {
 			return true
 		}
@@ -25,24 +58,24 @@ func (us UrlMaps) IsAlreadyExist(title string) bool {
 	return false
 }
 
-func (us UrlMaps) FilterByRegex(query string) UrlMaps {
-	var result UrlMaps
+func (us UrlMaps) FilterByRegex(query string) (UrlMaps, error) {
+	result := make([]UrlMap, 0)
 	regex, err := regexp.Compile(query)
 	if err != nil {
 		fmt.Println("Invalid regex:", query)
-		return result
+		return UrlMaps{}, err
 	}
-	for _, item := range us {
+	for _, item := range us.values {
 		if regex.MatchString(item.Title) {
 			result = append(result, item)
 		}
 	}
-	return result
+	return UrlMaps{values: result}, nil
 }
 
 func (us UrlMaps) TitleMaxLen() int {
 	var maxLen int
-	for _, u := range us {
+	for _, u := range us.values {
 		if runewidth.StringWidth(u.Title) > maxLen {
 			maxLen = runewidth.StringWidth(u.Title)
 		}
@@ -51,11 +84,11 @@ func (us UrlMaps) TitleMaxLen() int {
 }
 
 func (us UrlMaps) Add(value UrlMap) UrlMaps {
-	return append(us, value)
+	return UrlMaps{values: append(us.values, value)}
 }
 
 func (us UrlMaps) Size() int {
-	return len(us)
+	return len(us.values)
 }
 
 func (us UrlMaps) IsEmpty() bool {
@@ -67,29 +100,29 @@ func (us UrlMaps) IsNotEmpty() bool {
 }
 
 func ConvertToUrlMaps(items [][]string) (UrlMaps, error) {
-	var urlMaps UrlMaps
+	var urlMaps []UrlMap
 	for _, item := range items {
 		nu, err := url.Parse(item[1])
 		if err != nil {
 			fmt.Printf("parse error: %v", err)
-			return nil, fmt.Errorf("parse error: %v", err)
+			return UrlMaps{}, fmt.Errorf("parse error: %v", err)
 		}
 		urlMaps = append(urlMaps, UrlMap{Title: item[0], URL: nu})
 	}
-	return urlMaps, nil
+	return NewUrlMaps(urlMaps)
 
 }
 
 func (us UrlMaps) GetTitles() []string {
 	titles := make([]string, 0, us.Size())
-	for _, item := range us {
+	for _, item := range us.values {
 		titles = append(titles, item.Title)
 	}
 	return titles
 }
 
 func (us UrlMaps) GetItemFromLabel(label string) (UrlMap, error) {
-	for _, item := range us {
+	for _, item := range us.values {
 		if item.Title == label {
 			return item, nil
 		}
@@ -115,7 +148,7 @@ func WriteValuesToFile(values UrlMaps) error {
 	defer w.Flush()
 
 	// write a record
-	for _, value := range values {
+	for _, value := range values.values {
 		if err := w.Write([]string{value.Title, value.URL.String()}); err != nil {
 			return fmt.Errorf("write error: %v", err)
 		}
@@ -126,7 +159,7 @@ func WriteValuesToFile(values UrlMaps) error {
 func GetRecordsFromOpenCscFile() (UrlMaps, error) {
 	f, err := os.OpenFile(FileRelativePath, os.O_RDWR|os.O_CREATE, 0755)
 	if err != nil {
-		return nil, fmt.Errorf("open error: %v", err)
+		return UrlMaps{}, fmt.Errorf("open error: %v", err)
 	}
 	defer func() {
 		if closeErr := f.Close(); closeErr != nil {
@@ -141,7 +174,7 @@ func GetRecordsFromOpenCscFile() (UrlMaps, error) {
 
 	records, err := r.ReadAll()
 	if err != nil {
-		return nil, fmt.Errorf("read error: %v", err)
+		return UrlMaps{}, fmt.Errorf("read error: %v", err)
 	}
 	result := make([][]string, 0, len(records))
 	// print the records
@@ -154,14 +187,8 @@ func GetRecordsFromOpenCscFile() (UrlMaps, error) {
 	}
 	rs, err := ConvertToUrlMaps(result)
 	if err != nil {
-		return nil, err
-	}
-
-	ds := rs.GetDuplications()
-	if len(ds) != 0 {
-		err = NewDuplicationError(ds)
 		err.Error()
-		return nil, err
+		return UrlMaps{}, err
 	}
 	return rs, nil
 }

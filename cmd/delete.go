@@ -24,14 +24,17 @@ var deleteCmd = &cobra.Command{
 		if err != nil {
 			return
 		}
+		deleteTarget := records.Values()[deleteTargetIdx]
 
-		err = util.WriteValuesToFile(append(records[:deleteTargetIdx], records[deleteTargetIdx+1:]...))
+		vs := records.Delete(deleteTargetIdx)
+
+		err = util.WriteValuesToFile(vs)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
 
-		fmt.Printf("Deleted successfully %s - %s\n", records[deleteTargetIdx].Title, records[deleteTargetIdx].URL.String())
+		fmt.Printf("Deleted successfully %s - %s\n", deleteTarget.Title, deleteTarget.URL.String())
 	},
 }
 

@@ -40,7 +40,7 @@ var addCmd = &cobra.Command{
 			return
 		}
 
-		addTarget := res[0]
+		addTarget := res.Values()[0]
 
 		err = util.WriteValuesToFile(records.Add(addTarget))
 		if err != nil {

@@ -29,7 +29,7 @@ var listCmd = &cobra.Command{
 		}
 
 		ml := records.TitleMaxLen()
-		for _, r := range records {
+		for _, r := range records.Values() {
 			if showURLs {
 				fmt.Printf("%s - %s\n", runewidth.FillRight(r.Title, ml), r.URL.String())
 			} else {

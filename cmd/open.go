@@ -24,7 +24,7 @@ var openCmd = &cobra.Command{
 		}
 
 		// find the url
-		for _, r := range records {
+		for _, r := range records.Values() {
 			if r.Title == title {
 				if err = exec.Command("open", r.URL.String()).Start(); err != nil {
 					fmt.Println(err)
@@ -42,7 +42,7 @@ var openCmd = &cobra.Command{
 			return nil, cobra.ShellCompDirectiveNoFileComp
 		}
 		var titles []string
-		for _, r := range records {
+		for _, r := range records.Values() {
 			titles = append(titles, r.Title)
 		}
 
