@@ -114,11 +114,6 @@ func WriteValuesToFile(values UrlMaps) error {
 	w := csv.NewWriter(f)
 	defer w.Flush()
 
-	//write head
-	if err := w.Write([]string{"title", "url"}); err != nil {
-		return fmt.Errorf("write error: %v", err)
-	}
-
 	// write a record
 	for _, value := range values {
 		if err := w.Write([]string{value.Title, value.URL.String()}); err != nil {
@@ -129,7 +124,7 @@ func WriteValuesToFile(values UrlMaps) error {
 }
 
 func GetRecordsFromOpenCscFile() (UrlMaps, error) {
-	f, err := os.Open(FileRelativePath)
+	f, err := os.OpenFile(FileRelativePath, os.O_RDWR|os.O_CREATE, 0755)
 	if err != nil {
 		return nil, fmt.Errorf("open error: %v", err)
 	}
@@ -144,8 +139,6 @@ func GetRecordsFromOpenCscFile() (UrlMaps, error) {
 	// create a new csv reader
 	r := csv.NewReader(f)
 
-	// skip the first line (header)
-	_, _ = r.Read()
 	records, err := r.ReadAll()
 	if err != nil {
 		return nil, fmt.Errorf("read error: %v", err)

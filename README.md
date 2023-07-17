@@ -11,6 +11,13 @@ On macOS, urlo can be installed with Homebrew:
 ```
 
 ## Usage
+### Display the version
+To display the version of urlo, use the -v option:
+
+```shell
+> urlo -v
+```
+
 ### Add a new URL
 To add a new URL to the local CSV file, use the add command:
 
@@ -65,13 +72,6 @@ Use the -q option to filter the list with a regular expression:
 > urlo select -q y
 ? Select a Website: 
   ▸ yahoo
-```
-
-### Display the version
-To display the version of urlo, use the -v option:
-
-```shell
-> urlo -v
 ```
 
 ### License
