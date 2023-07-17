@@ -11,8 +11,9 @@ func PromptGetSelect(items UrlMaps) (UrlMap, int, error) {
 
 	for index < 0 {
 		prompt := promptui.Select{
-			Label: "Select a Website",
-			Items: items.GetTitles(),
+			Label:    "Select a Website",
+			Items:    items.GetTitles(),
+			HideHelp: true,
 		}
 
 		index, result, err = prompt.Run()
