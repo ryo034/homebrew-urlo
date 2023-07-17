@@ -75,4 +75,4 @@ Use the -q option to filter the list with a regular expression:
 ```
 
 ### License
-urlo is released under the MIT License. See LICENSE for more information.
+urlo is released under the GPT-3.0 License. See LICENSE for more information.

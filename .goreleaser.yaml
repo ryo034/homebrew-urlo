@@ -47,3 +47,9 @@ brews:
       owner: ryo034
       name: homebrew-urlo
       token: "{{ .Env.TAP_GITHUB_TOKEN }}"
+    folder: Formula
+    homepage: 'https://github.com/ryo034/homebrew-urlo'
+    description: A simple CLI tool to open URLs from the command line
+    license: GPL-3.0
+    test: |
+      urlo --version
