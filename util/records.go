@@ -1,17 +1,24 @@
 package util
 
 import (
-	"encoding/csv"
+	"encoding/json"
 	"fmt"
 	"github.com/mattn/go-runewidth"
+	"io"
 	"net/url"
 	"os"
+	"path/filepath"
 	"regexp"
 )
 
 type UrlMap struct {
 	Title string
 	URL   *url.URL
+}
+
+type UrlMapJson struct {
+	Title string `json:"title"`
+	URL   string `json:"url"`
 }
 
 type UrlMaps struct {
@@ -99,20 +106,6 @@ func (us UrlMaps) IsNotEmpty() bool {
 	return !us.IsEmpty()
 }
 
-func ConvertToUrlMaps(items [][]string) (UrlMaps, error) {
-	var urlMaps []UrlMap
-	for _, item := range items {
-		nu, err := url.Parse(item[1])
-		if err != nil {
-			fmt.Printf("parse error: %v", err)
-			return UrlMaps{}, fmt.Errorf("parse error: %v", err)
-		}
-		urlMaps = append(urlMaps, UrlMap{Title: item[0], URL: nu})
-	}
-	return NewUrlMaps(urlMaps)
-
-}
-
 func (us UrlMaps) GetTitles() []string {
 	titles := make([]string, 0, us.Size())
 	for _, item := range us.values {
@@ -143,52 +136,70 @@ func WriteValuesToFile(values UrlMaps) error {
 		}
 	}()
 
-	// create a new csv writer
-	w := csv.NewWriter(f)
-	defer w.Flush()
-
-	// write a record
-	for _, value := range values.values {
-		if err := w.Write([]string{value.Title, value.URL.String()}); err != nil {
-			return fmt.Errorf("write error: %v", err)
-		}
+	urlMapJsons := make([]UrlMapJson, 0, values.Size())
+	for _, item := range values.values {
+		urlMapJsons = append(urlMapJsons, UrlMapJson{Title: item.Title, URL: item.URL.String()})
+	}
+	b, err := json.Marshal(urlMapJsons)
+	if err != nil {
+		return fmt.Errorf("json marshal error: %v", err)
+	}
+	if _, err = f.Write(b); err != nil {
+		return fmt.Errorf("write error: %v", err)
 	}
 	return nil
 }
 
-func GetRecordsFromOpenCscFile() (UrlMaps, error) {
-	f, err := os.OpenFile(FileRelativePath, os.O_RDWR|os.O_CREATE, 0755)
-	if err != nil {
-		return UrlMaps{}, fmt.Errorf("open error: %v", err)
-	}
-	defer func() {
-		if closeErr := f.Close(); closeErr != nil {
-			if err = fmt.Errorf("defer close error: %v", closeErr); err != nil {
-				fmt.Println(err)
+func GetRecordsFromFile() (UrlMaps, error) {
+	var urlMaps []UrlMapJson
+
+	_, err := os.Stat(FileRelativePath)
+	if os.IsNotExist(err) {
+		if err = os.MkdirAll(filepath.Dir(FileRelativePath), 0755); err != nil {
+			return UrlMaps{}, fmt.Errorf("mkdir error: %v", err)
+		}
+
+		f, err := os.Create(FileRelativePath)
+		if err != nil {
+			return UrlMaps{}, fmt.Errorf("create error: %v", err)
+		}
+		defer func() {
+			if closeErr := f.Close(); closeErr != nil {
+				if err = fmt.Errorf("defer close error: %v", closeErr); err != nil {
+					fmt.Println(err)
+				}
 			}
+		}()
+		return UrlMaps{}, nil
+	} else {
+		// If the file exists, read it
+		f, err := os.Open(FileRelativePath)
+		if err != nil {
+			return UrlMaps{}, fmt.Errorf("open error: %v", err)
 		}
-	}()
+		defer func() {
+			if closeErr := f.Close(); closeErr != nil {
+				if err = fmt.Errorf("defer close error: %v", closeErr); err != nil {
+					fmt.Println(err)
+				}
+			}
+		}()
 
-	// create a new csv reader
-	r := csv.NewReader(f)
-
-	records, err := r.ReadAll()
-	if err != nil {
-		return UrlMaps{}, fmt.Errorf("read error: %v", err)
-	}
-	result := make([][]string, 0, len(records))
-	// print the records
-	for _, record := range records {
-		if len(record) == 0 || (len(record) > 0 && record[0] == "") {
-			// skip empty lines
-			continue
+		if err = json.NewDecoder(f).Decode(&urlMaps); err != nil {
+			// If the file is empty, return empty
+			if err == io.EOF {
+				return UrlMaps{}, nil
+			}
+			return UrlMaps{}, err
 		}
-		result = append(result, record)
+		result := make([]UrlMap, 0)
+		for _, item := range urlMaps {
+			u, err := url.Parse(item.URL)
+			if err != nil {
+				return UrlMaps{}, err
+			}
+			result = append(result, UrlMap{Title: item.Title, URL: u})
+		}
+		return NewUrlMaps(result)
 	}
-	rs, err := ConvertToUrlMaps(result)
-	if err != nil {
-		err.Error()
-		return UrlMaps{}, err
-	}
-	return rs, nil
 }

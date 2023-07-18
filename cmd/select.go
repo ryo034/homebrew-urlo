@@ -18,7 +18,7 @@ var selectCmd = &cobra.Command{
 			return
 		}
 
-		records, err := util.GetRecordsFromOpenCscFile()
+		records, err := util.GetRecordsFromFile()
 		if err != nil {
 			return
 		}

@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/fatih/color"
+	"net/url"
 	"urlo/util"
 
 	"github.com/spf13/cobra"
@@ -19,13 +20,13 @@ var addCmd = &cobra.Command{
 			color.Red("Error: Title is empty\n")
 			return
 		}
-		url := args[1]
-		if url == "" {
+		u := args[1]
+		if u == "" {
 			color.Red("Error: URL is empty\n")
 			return
 		}
 
-		records, err := util.GetRecordsFromOpenCscFile()
+		records, err := util.GetRecordsFromFile()
 		if err != nil {
 			return
 		}
@@ -35,12 +36,17 @@ var addCmd = &cobra.Command{
 			return
 		}
 
-		res, err := util.ConvertToUrlMaps([][]string{{title, url}})
+		//res, err := util.ConvertToUrlMaps([][]string{{title, url}})
+		//if err != nil {
+		//	return
+		//}
+		//
+		pu, err := url.Parse(u)
 		if err != nil {
+			fmt.Println(err)
 			return
 		}
-
-		addTarget := res.Values()[0]
+		addTarget := util.UrlMap{Title: title, URL: pu}
 
 		err = util.WriteValuesToFile(records.Add(addTarget))
 		if err != nil {

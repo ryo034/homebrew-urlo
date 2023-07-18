@@ -11,7 +11,7 @@ var deleteCmd = &cobra.Command{
 	Short: "Select to delete a URL",
 	Long:  "Select to delete a URL",
 	Run: func(cmd *cobra.Command, args []string) {
-		records, err := util.GetRecordsFromOpenCscFile()
+		records, err := util.GetRecordsFromFile()
 		if err != nil {
 			return
 		}

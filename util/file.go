@@ -1,3 +1,3 @@
 package util
 
-var FileRelativePath = "./data/urls.csv"
+var FileRelativePath = "data/urls.json"

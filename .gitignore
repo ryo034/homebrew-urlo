@@ -11,4 +11,5 @@ data.ms
 .data
 
 data/*.csv
+data/*.json
 dist/

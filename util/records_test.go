@@ -70,36 +70,6 @@ func TestUrlMaps_TitleMaxLen(t *testing.T) {
 	}
 }
 
-func TestConvertToUrlMaps(t *testing.T) {
-	type args struct {
-		items [][]string
-	}
-	tests := []struct {
-		name    string
-		args    args
-		want    UrlMaps
-		wantErr bool
-	}{
-		{
-			name: "should return UrlMaps",
-			args: args{items: [][]string{{"Google", "https://www.google.com/"}, {"Yahoo", "https://www.yahoo.co.jp/"}}},
-			want: UrlMaps{[]UrlMap{{Title: "Google", URL: &url.URL{Scheme: "https", Host: "www.google.com", Path: "/"}}, {Title: "Yahoo", URL: &url.URL{Scheme: "https", Host: "www.yahoo.co.jp", Path: "/"}}}},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := ConvertToUrlMaps(tt.args.items)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("ConvertToUrlMaps() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ConvertToUrlMaps() got = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func TestUrlMaps_GetTitles(t *testing.T) {
 	tests := []struct {
 		name string

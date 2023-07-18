@@ -14,7 +14,7 @@ var openCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		title := args[0]
-		records, err := util.GetRecordsFromOpenCscFile()
+		records, err := util.GetRecordsFromFile()
 		if err != nil {
 			return
 		}
@@ -36,7 +36,7 @@ var openCmd = &cobra.Command{
 		fmt.Println("URL not found")
 	},
 	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-		records, err := util.GetRecordsFromOpenCscFile()
+		records, err := util.GetRecordsFromFile()
 		if err != nil {
 			fmt.Println(err)
 			return nil, cobra.ShellCompDirectiveNoFileComp
