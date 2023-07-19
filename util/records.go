@@ -29,6 +29,18 @@ func (us UrlMaps) Values() []UrlMap {
 	return us.values
 }
 
+func (us UrlMaps) Shift() UrlMap {
+	return us.values[0]
+}
+
+func (us UrlMaps) ToJson() []UrlMapJson {
+	jsonValues := make([]UrlMapJson, len(us.values))
+	for i, u := range us.values {
+		jsonValues[i] = UrlMapJson{Title: u.Title, URL: u.URL.String()}
+	}
+	return jsonValues
+}
+
 func NewUrlMaps(values []UrlMap) (UrlMaps, error) {
 	titleToUrls := make(map[string][]UrlMap)
 	for _, u := range values {
@@ -90,8 +102,20 @@ func (us UrlMaps) TitleMaxLen() int {
 	return maxLen
 }
 
-func (us UrlMaps) Add(value UrlMap) UrlMaps {
-	return UrlMaps{values: append(us.values, value)}
+func (us UrlMaps) Add(value UrlMap) (UrlMaps, error) {
+	if us.IsAlreadyExist(value.Title) {
+		return UrlMaps{}, fmt.Errorf("already exist: %s", value.Title)
+	}
+	return UrlMaps{values: append(us.values, value)}, nil
+}
+
+func (us UrlMaps) AddAll(values UrlMaps) (UrlMaps, error) {
+	for _, item := range values.values {
+		if us.IsAlreadyExist(item.Title) {
+			return UrlMaps{}, fmt.Errorf("already exist: %s", item.Title)
+		}
+	}
+	return UrlMaps{values: append(us.values, values.values...)}, nil
 }
 
 func (us UrlMaps) Size() int {

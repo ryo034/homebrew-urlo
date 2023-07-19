@@ -10,7 +10,7 @@ import (
 
 var openCmd = &cobra.Command{
 	Use:   "open",
-	Short: "Open a URL from the csv",
+	Short: "Open a URL from the json",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		title := args[0]

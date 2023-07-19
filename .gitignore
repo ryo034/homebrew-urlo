@@ -10,6 +10,5 @@ data.ms
 # vendor/
 .data
 
-data/*.csv
 data/*.json
 dist/

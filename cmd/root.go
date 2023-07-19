@@ -8,8 +8,8 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use:   "urlo",
-	Short: "A simple CLI for opening URLs from a csv file",
-	Long:  "A simple CLI for opening URLs from a csv file",
+	Short: "A simple CLI for opening URLs from a json file",
+	Long:  "A simple CLI for opening URLs from a json file",
 }
 
 func Execute() {

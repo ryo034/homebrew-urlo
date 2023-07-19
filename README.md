@@ -1,5 +1,5 @@
 # urlo CLI
-urlo is a Command Line Interface (CLI) tool for managing and interacting with a local CSV file containing URLs.
+urlo is a Command Line Interface (CLI) tool for managing and interacting with a local Json file containing URLs.
 
 The tool is designed to offer quick and convenient access to URLs, with options for adding new URLs, listing all URLs, selecting a URL to open, and more.
 
@@ -7,7 +7,7 @@ The tool is designed to offer quick and convenient access to URLs, with options 
 On macOS, urlo can be installed with Homebrew:
 
 ```shell
-> brew install urlo
+> brew install ryo034/urlo/homebrew-urlo
 ```
 
 ## Usage
@@ -19,7 +19,7 @@ To display the version of urlo, use the -v option:
 ```
 
 ### Add a new URL
-To add a new URL to the local CSV file, use the add command:
+To add a new URL to the local Json file, use the add command:
 
 ```shell
 > urlo add {title} {url}
@@ -27,22 +27,56 @@ To add a new URL to the local CSV file, use the add command:
 # Example
 > urlo add Google https://google.com
 ```
+
 ### List all URLs
-To list all URLs from the local CSV file, use the list command:
+To list all URLs from the local Json file, use the list command:
 
 ```shell
 > urlo list
-google
-yahoo
-```
-
-Use the -u option to also display the URLs:
-
-```shell
-> urlo list -u
 google - https://google.com
 yahoo  - https://yahoo.com
 ```
+
+Use the -j or -s option to display the list in JSON format:
+
+```shell
+> urlo list -j
+[
+  {
+    "title": "google",
+    "url": "https://google.com"
+  },
+  {
+    "title": "yahoo",
+    "url": "https://yahoo.com"
+  }
+]
+
+> urlo list -s
+'[{title: "google", url: "https://google.com"},{title: "yahoo", url: "https://yahoo.com"}]'
+```
+
+if you want share the list with others, use the pbcopy command:
+
+```shell
+> urlo list -s | pbcopy
+> urlo set -s "{set output json string}"
+```
+
+### Set the list
+To set the list of URLs from a JSON string, use the set command:
+
+```shell
+> urlo list
+No records found
+
+> urlo set '[{"title": "google", "url": "https://google.com"},{"title": "yahoo", "url": "https://yahoo.com"}]'
+
+> urlo list
+google - https://google.com
+yahoo  - https://yahoo.com
+```
+
 ### Open a URL
 To open a URL by its title, use the open command:
 
@@ -50,7 +84,7 @@ To open a URL by its title, use the open command:
 > urlo open {title}
 
 # Example
-> urlo open Google
+> urlo open google
 ```
 
 ### Select a URL to open

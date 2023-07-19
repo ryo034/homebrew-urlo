@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/mattn/go-runewidth"
 	"urlo/util"
@@ -10,15 +11,8 @@ import (
 
 var listCmd = &cobra.Command{
 	Use:   "list",
-	Short: "List all URLs from the csv",
+	Short: "List all URLs from the json",
 	Run: func(cmd *cobra.Command, args []string) {
-		// get the flags
-		showURLs, err := cmd.Flags().GetBool("urls")
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-
 		records, err := util.GetRecordsFromFile()
 		if err != nil {
 			return
@@ -28,18 +22,51 @@ var listCmd = &cobra.Command{
 			return
 		}
 
-		ml := records.TitleMaxLen()
-		for _, r := range records.Values() {
-			if showURLs {
-				fmt.Printf("%s - %s\n", runewidth.FillRight(r.Title, ml), r.URL.String())
-			} else {
-				fmt.Println(r.Title)
+		jsonOutput, err := cmd.Flags().GetBool("json")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		jsonStringOutput, err := cmd.Flags().GetBool("string")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		//jとsが両方指定されていたらエラー
+		if jsonOutput && jsonStringOutput {
+			fmt.Println("Can't use both -j and -s")
+			return
+		}
+
+		if jsonOutput {
+			jsonData, err := json.MarshalIndent(records.ToJson(), "", "  ")
+			if err != nil {
+				fmt.Println(err)
+				return
 			}
+			fmt.Println(string(jsonData))
+			return
+		}
+
+		if jsonStringOutput {
+			jsonData, err := json.Marshal(records.ToJson())
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+			fmt.Println(string(jsonData))
+			return
+		}
+
+		for _, r := range records.Values() {
+			fmt.Printf("%s - %s\n", runewidth.FillRight(r.Title, records.TitleMaxLen()), r.URL.String())
 		}
 	},
 }
 
 func init() {
-	listCmd.Flags().BoolP("urls", "u", false, "Show the URLs as well as the titles")
+	listCmd.Flags().BoolP("json", "j", false, "Output in JSON format")
+	listCmd.Flags().BoolP("string", "s", false, "Output in JSON String format")
 	rootCmd.AddCommand(listCmd)
 }
