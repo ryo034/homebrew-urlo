@@ -5,21 +5,21 @@
 class HomebrewUrlo < Formula
   desc "A simple CLI tool to open URLs from the command line"
   homepage "https://github.com/ryo034/homebrew-urlo"
-  version "1.0.9"
+  version "1.0.11"
   license "GPL-3.0"
 
   on_macos do
-    if Hardware::CPU.intel?
-      url "https://github.com/ryo034/homebrew-urlo/releases/download/v1.0.9/homebrew-urlo_Darwin_x86_64.tar.gz"
-      sha256 "bdaa6edf95f0ca2880076be9dd171ed678067ab0e3b842df62993d6f207174f0"
+    if Hardware::CPU.arm?
+      url "https://github.com/ryo034/homebrew-urlo/releases/download/v1.0.11/homebrew-urlo_Darwin_arm64.tar.gz"
+      sha256 "7d688edfb77f508dc6185e865d7a0295e8503f59aa19c1d44cbf242370aa69d3"
 
       def install
         bin.install "urlo"
       end
     end
-    if Hardware::CPU.arm?
-      url "https://github.com/ryo034/homebrew-urlo/releases/download/v1.0.9/homebrew-urlo_Darwin_arm64.tar.gz"
-      sha256 "a3b4842321a014b8b397f9e81ff41cced3269febd8ccc51899f433acf145b743"
+    if Hardware::CPU.intel?
+      url "https://github.com/ryo034/homebrew-urlo/releases/download/v1.0.11/homebrew-urlo_Darwin_x86_64.tar.gz"
+      sha256 "f0d9de6eba1b5120b2b052de572301068c8c19620ffb0b9d981e96a22cd07639"
 
       def install
         bin.install "urlo"
@@ -29,16 +29,16 @@ class HomebrewUrlo < Formula
 
   on_linux do
     if Hardware::CPU.intel?
-      url "https://github.com/ryo034/homebrew-urlo/releases/download/v1.0.9/homebrew-urlo_Linux_x86_64.tar.gz"
-      sha256 "58835ed412fb8bceaa0779e581f72179bbf3dc984f2a75d505a974a582f86223"
+      url "https://github.com/ryo034/homebrew-urlo/releases/download/v1.0.11/homebrew-urlo_Linux_x86_64.tar.gz"
+      sha256 "c185ffe6a7b7f629ff86d1582481354d22d6dc56729608a069fbbcea95dc71b1"
 
       def install
         bin.install "urlo"
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/ryo034/homebrew-urlo/releases/download/v1.0.9/homebrew-urlo_Linux_arm64.tar.gz"
-      sha256 "c19ae1490b42a004b75949a81c6eb0d7a84ffeaa61e52c2c6733c9685ff49ef7"
+      url "https://github.com/ryo034/homebrew-urlo/releases/download/v1.0.11/homebrew-urlo_Linux_arm64.tar.gz"
+      sha256 "2c7c04eb46fb37274135b642cca41fe55dfe87b801ae719c56520bd891eea7a9"
 
       def install
         bin.install "urlo"
