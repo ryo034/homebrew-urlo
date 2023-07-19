@@ -1,7 +1,13 @@
 # urlo CLI
+![license](https://img.shields.io/badge/license-Apache2.0-blue)
+![made with language](https://img.shields.io/badge/Made%20with-Go-00ADD8.svg)
+[![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/ryo034/homebrew-urlo)](https://github.com/ryo034/homebrew-urlo/releases)
+
 urlo is a Command Line Interface (CLI) tool for managing and interacting with a local Json file containing URLs.
 
 The tool is designed to offer quick and convenient access to URLs, with options for adding new URLs, listing all URLs, selecting a URL to open, and more.
+
+urlo enables developers to effortlessly share a list of URLs.
 
 ## Installation
 On macOS, urlo can be installed with Homebrew:
