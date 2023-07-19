@@ -25,7 +25,14 @@ To add a new URL to the local Json file, use the add command:
 > urlo add {title} {url}
 
 # Example
-> urlo add google https://google.com
+> urlo add google https://www.google.com
+```
+
+### Bulk add URLs
+To add multiple URLs to the local Json file, use the add command:
+
+```shell
+> urlo bulk-add {json string}
 ```
 
 ### List all URLs
@@ -33,8 +40,8 @@ To list all URLs from the local Json file, use the list command:
 
 ```shell
 > urlo list
-google - https://google.com
-yahoo  - https://yahoo.com
+google - https://www.google.com
+yahoo  - https://www.yahoo.com
 ```
 
 Use the -j or -s option to display the list in JSON format:
@@ -44,33 +51,30 @@ Use the -j or -s option to display the list in JSON format:
 [
   {
     "title": "google",
-    "url": "https://google.com"
+    "url": "https://www.google.com"
   },
   {
     "title": "yahoo",
-    "url": "https://yahoo.com"
+    "url": "https://www.yahoo.com"
   }
 ]
 
 > urlo list -s
-'[{title: "google", url: "https://google.com"},{title: "yahoo", url: "https://yahoo.com"}]'
+'[{title: "google", url: "https://www.google.com"},{title: "yahoo", url: "https://www.yahoo.com"}]'
 ```
 
 ### Set the list
-To set the list of URLs from a JSON string, use the set command:
+To set with override the list of URLs from a JSON string, use the set command:
 
 ```shell
 > urlo list
-No records found
+bing - https://www.bing.com
 
-> urlo list -s
-'[{title: "google", url: "https://google.com"},{title: "yahoo", url: "https://yahoo.com"}]'
-
-> urlo set '[{"title": "google", "url": "https://google.com"},{"title": "yahoo", "url": "https://yahoo.com"}]'
+> urlo set '[{"title": "google", "url": "https://www.google.com"},{"title": "yahoo", "url": "https://www.yahoo.com"}]'
 
 > urlo list
-google - https://google.com
-yahoo  - https://yahoo.com
+google - https://www.google.com
+yahoo  - https://www.yahoo.com
 ```
 
 ### Open a URL
@@ -88,7 +92,7 @@ To display a list of all URLs and select one to open, use the select command:
 
 ```shell
 > urlo select
-? Select a Website: 
+? Select a Website:
   ▸ google
     yahoo
 ```
@@ -96,11 +100,11 @@ Use the -q option to filter the list with a regular expression:
 
 ```shell
 > urlo select -q g
-? Select a Website: 
+? Select a Website:
   ▸ google
-  
+
 > urlo select -q y
-? Select a Website: 
+? Select a Website:
   ▸ yahoo
 ```
 

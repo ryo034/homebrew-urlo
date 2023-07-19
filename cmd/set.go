@@ -16,7 +16,6 @@ var setCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		var newUrlMap []util.UrlMapJson
-		//json string出ない場合にエラーメッセージを表示
 		if args[0] == "" {
 			return fmt.Errorf("JSON string is empty")
 		}
@@ -24,14 +23,20 @@ var setCmd = &cobra.Command{
 			return fmt.Errorf("failed to parse JSON string: %w", err)
 		}
 
+		if !util.Confirm("Are you sure you want to overwrite the existing data?") {
+			fmt.Println("Aborted")
+			return nil
+		}
+
+		if err := util.ClearRecords(); err != nil {
+			fmt.Println(err)
+			return nil
+		}
+
 		records, err := util.GetRecordsFromFile()
 		if err != nil {
 			fmt.Println(err)
 			return err
-		}
-		if records.IsEmpty() {
-			fmt.Println("No records found")
-			return nil
 		}
 
 		res, err := adapter.AdaptUrlMapJsonToUrlMaps(newUrlMap)

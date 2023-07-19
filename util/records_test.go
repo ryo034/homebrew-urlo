@@ -112,7 +112,7 @@ func TestUrlMaps_GetItemFromLabel(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := tt.us.GetItemFromLabel(tt.args.label)
+			got, _, err := tt.us.GetItemFromLabel(tt.args.label)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetItemFromLabel() error = %v, wantErr %v", err, tt.wantErr)
 				return

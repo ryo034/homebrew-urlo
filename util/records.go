@@ -138,13 +138,32 @@ func (us UrlMaps) GetTitles() []string {
 	return titles
 }
 
-func (us UrlMaps) GetItemFromLabel(label string) (UrlMap, error) {
-	for _, item := range us.values {
+func (us UrlMaps) GetItemFromLabel(label string) (UrlMap, int, error) {
+	for idx, item := range us.values {
 		if item.Title == label {
-			return item, nil
+			return item, idx, nil
 		}
 	}
-	return UrlMap{}, fmt.Errorf("no item found for label %s", label)
+	return UrlMap{}, 0, fmt.Errorf("no item found for label %s", label)
+}
+
+func ClearRecords() error {
+	f, err := os.Create(FileRelativePath)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			if err = fmt.Errorf("defer close error: %v", closeErr); err != nil {
+				fmt.Println(err)
+			}
+		}
+	}()
+	b, _ := json.Marshal([]UrlMapJson{})
+	if _, err = f.Write(b); err != nil {
+		return err
+	}
+	return nil
 }
 
 func WriteValuesToFile(values UrlMaps) error {

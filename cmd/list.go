@@ -33,7 +33,7 @@ var listCmd = &cobra.Command{
 			return
 		}
 
-		//jとsが両方指定されていたらエラー
+		// If both j and s are specified at the same time, return an error
 		if jsonOutput && jsonStringOutput {
 			fmt.Println("Can't use both -j and -s")
 			return

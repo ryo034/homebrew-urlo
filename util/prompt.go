@@ -1,28 +1,30 @@
 package util
 
 import (
-	"github.com/manifoldco/promptui"
+	"github.com/AlecAivazis/survey/v2"
 )
 
 func PromptGetSelect(items UrlMaps) (UrlMap, int, error) {
-	index := -1
 	var result string
-	var err error
-
-	for index < 0 {
-		prompt := promptui.Select{
-			Label:    "Select a Website",
-			Items:    items.GetTitles(),
-			HideHelp: true,
+	for result == "" {
+		prompt := &survey.Select{
+			Message: "Select a Website",
+			Options: items.GetTitles(),
 		}
-
-		index, result, err = prompt.Run()
+		if err := survey.AskOne(prompt, &result); err != nil {
+			return UrlMap{}, 0, err
+		}
 	}
+	return items.GetItemFromLabel(result)
+}
 
-	if err != nil {
-		return UrlMap{}, index, err
+func Confirm(prompt string) bool {
+	confirmOk := false
+	p := &survey.Confirm{
+		Message: prompt,
 	}
-
-	res, err := items.GetItemFromLabel(result)
-	return res, index, err
+	if err := survey.AskOne(p, &confirmOk); err != nil {
+		return false
+	}
+	return confirmOk
 }
