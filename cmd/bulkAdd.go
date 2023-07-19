@@ -52,7 +52,6 @@ var bulkAddCmd = &cobra.Command{
 		}
 
 		fmt.Println("Successfully add all the new URL map.")
-		return
 	},
 }
 
