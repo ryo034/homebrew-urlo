@@ -25,7 +25,7 @@ To add a new URL to the local Json file, use the add command:
 > urlo add {title} {url}
 
 # Example
-> urlo add Google https://google.com
+> urlo add google https://google.com
 ```
 
 ### List all URLs
@@ -62,6 +62,9 @@ To set the list of URLs from a JSON string, use the set command:
 ```shell
 > urlo list
 No records found
+
+> urlo list -s
+'[{title: "google", url: "https://google.com"},{title: "yahoo", url: "https://yahoo.com"}]'
 
 > urlo set '[{"title": "google", "url": "https://google.com"},{"title": "yahoo", "url": "https://yahoo.com"}]'
 
