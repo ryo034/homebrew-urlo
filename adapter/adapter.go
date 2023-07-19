@@ -11,7 +11,6 @@ func CheckUrlStrictly(v string) (*url.URL, error) {
 	if err != nil {
 		return nil, err
 	}
-	// check url validation
 	if !u.IsAbs() {
 		return nil, fmt.Errorf("URL must be absolute: %s", u.String())
 	}

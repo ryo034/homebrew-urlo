@@ -56,13 +56,6 @@ Use the -j or -s option to display the list in JSON format:
 '[{title: "google", url: "https://google.com"},{title: "yahoo", url: "https://yahoo.com"}]'
 ```
 
-if you want share the list with others, use the pbcopy command:
-
-```shell
-> urlo list -s | pbcopy
-> urlo set -s "{set output json string}"
-```
-
 ### Set the list
 To set the list of URLs from a JSON string, use the set command:
 
@@ -108,5 +101,25 @@ Use the -q option to filter the list with a regular expression:
   ▸ yahoo
 ```
 
-### License
-urlo is released under the GPT-3.0 License. See LICENSE for more information.
+## License
+urlo is released under the Apache License 2.0 License. See LICENSE for more information.
+
+## Data Privacy and Security
+One of the key features of our library is how it handles data. Rather than relying on external databases or cloud storage, this library manages all data using local files on your system.
+This ensures that your data stays where it belongs: with you.
+With this approach, we prioritize your privacy and security, giving you full control over your data without compromising its accessibility.
+
+## Share your list
+You can share your list with others by using the pbcopy command:
+
+```shell
+> urlo list -s | pbcopy
+> urlo set -s "{set output json string}"
+```
+
+## Maintenance and Support
+As an open-source tool, we greatly value and rely on our community. The feedback, questions, and involvement from users not only help us to constantly improve and develop, but also make this project more robust and user-friendly.
+
+In an open-source project, maintaining quality and providing consistent support are key. We are dedicated to fixing bugs, adding new features, and providing support as questions or issues arise. However, please understand that this is a community project, and responses or solutions may take time.
+
+We appreciate your patience and encourage active contribution to help improve our tool. After all, the strength of open-source lies in the collective power of a community working together.
