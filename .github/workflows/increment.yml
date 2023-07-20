@@ -27,5 +27,3 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: ${{ github.event.inputs.semver_bump }}
-      - name: Run release action
-        uses: ./.github/workflows/release

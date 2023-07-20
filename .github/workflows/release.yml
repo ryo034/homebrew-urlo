@@ -1,7 +1,9 @@
 name: Release
 
 on:
-  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   release:
@@ -26,7 +28,7 @@ jobs:
         run: echo "TAG_VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
       - name: echo tag version
-        run: echo $TAG_VERSION
+        run: echo $TAG_VERSIONz
 
       - uses: goreleaser/goreleaser-action@v4
         with:
