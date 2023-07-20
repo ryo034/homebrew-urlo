@@ -45,10 +45,14 @@ jobs:
           go-version-file: "go.mod"
           cache: true
 
+      - name: Remove v from tag
+        id: remove_v
+        run: echo "TAG_VERSION=${{ steps.tag_version.outputs.new_tag#v }}" >> $GITHUB_OUTPUT
+
       - uses: goreleaser/goreleaser-action@v4
         with:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAP_GITHUB_TOKEN: ${{ secrets.TAP_GITHUB_TOKEN }}
-          VERSION: ${{ steps.tag_version.outputs.new_tag }}
+          VERSION: ${{ steps.remove_v.outputs.TAG_VERSION }}
