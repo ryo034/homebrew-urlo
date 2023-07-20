@@ -37,28 +37,3 @@ jobs:
           tag_name: ${{ steps.tag_version.outputs.new_tag }}
           release_name: Release ${{ steps.tag_version.outputs.new_tag }}
           body: ${{ steps.tag_version.outputs.changelog }}
-
-      - name: Set up Go
-        id: setup_go
-        uses: actions/setup-go@v4
-        with:
-          go-version-file: "go.mod"
-          cache: true
-
-      - name: Remove v from tag
-        id: remove_v
-        run: |
-          TAG=${{ steps.tag_version.outputs.new_tag }}
-          TAG_VERSION=${TAG#v}
-          echo "TAG_VERSION=$TAG_VERSION"
-          echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_OUTPUT
-
-      - uses: goreleaser/goreleaser-action@v4
-        with:
-          distribution: goreleaser
-          version: latest
-          args: release --clean
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAP_GITHUB_TOKEN: ${{ secrets.TAP_GITHUB_TOKEN }}
-          TAG_VERSION: ${{ steps.remove_v.outputs.TAG_VERSION }}
