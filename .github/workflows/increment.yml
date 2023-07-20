@@ -21,12 +21,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
       - name: Bump version and push tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: ${{ github.event.inputs.semver_bump }}
+
       - name: Publish release
         uses: actions/create-release@v1
         env:
@@ -35,3 +37,18 @@ jobs:
           tag_name: ${{ steps.tag_version.outputs.new_tag }}
           release_name: Release ${{ steps.tag_version.outputs.new_tag }}
           body: ${{ steps.tag_version.outputs.changelog }}
+
+      - name: Set up Go
+        id: setup_go
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: "go.mod"
+          cache: true
+
+      - uses: goreleaser/goreleaser-action@v4
+        with:
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAP_GITHUB_TOKEN: ${{ secrets.TAP_GITHUB_TOKEN }}
+          VERSION: ${{ steps.tag_version.outputs.new_tag }}
