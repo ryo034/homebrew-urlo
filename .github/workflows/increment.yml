@@ -55,8 +55,10 @@ jobs:
 
       - uses: goreleaser/goreleaser-action@v4
         with:
+          distribution: goreleaser
+          version: latest
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAP_GITHUB_TOKEN: ${{ secrets.TAP_GITHUB_TOKEN }}
-          VERSION: ${{ steps.remove_v.outputs.TAG_VERSION }}
+          TAG_VERSION: ${{ steps.remove_v.outputs.TAG_VERSION }}

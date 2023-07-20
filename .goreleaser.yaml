@@ -17,7 +17,7 @@ builds:
       - darwin
     ldflags:
       - -s -w
-      - -X urlo/cmd.version={{ .Env.VERSION }}
+      - -X urlo/cmd.version={{ .Env.TAG_VERSION }}
 archives:
   - format: tar.gz
     # this name template makes the OS and Arch compatible with the results of uname.
