@@ -1,12 +1,14 @@
 name: Release
 
+run-name: Release v${{ github.event.inputs.tag_version }}
+
 on:
   workflow_dispatch:
     inputs:
       tag_version:
         type: string
         required: true
-        description: Tag version to release
+        description: "Tag version to release. Example: 1.0.0"
 
 jobs:
   release:
