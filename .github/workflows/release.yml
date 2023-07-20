@@ -4,11 +4,11 @@ run-name: Release v${{ github.event.inputs.tag_version }}
 
 on:
   workflow_dispatch:
-    inputs:
-      tag_version:
-        type: string
-        required: true
-        description: "Tag version to release. Example: 1.0.0"
+    # inputs:
+    #   tag_version:
+    #     type: string
+    #     required: true
+    #     description: "Tag version to release. Example: 1.0.0"
 
 jobs:
   release:
@@ -28,10 +28,21 @@ jobs:
           go-version-file: "go.mod"
           cache: true
 
+      - name: Get Latest tag
+        id: latest_tag
+        run: |
+          git fetch --prune --unshallow
+          TAG_VERSION=$(git describe --tags --abbrev=0)
+          echo "TAG_VERSION=${TAG_VERSION#/v}" >> $GITHUB_OUTPUT
+
+      - name: Checkout Latest tag
+        run: |
+          git checkout ${{ steps.latest_tag.outputs.TAG_VERSION }}
+
       - uses: goreleaser/goreleaser-action@v4
         with:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAP_GITHUB_TOKEN: ${{ secrets.TAP_GITHUB_TOKEN }}
-          TAG_VERSION: ${{ github.event.inputs.tag_version }}
+          TAG_VERSION: ${{ steps.latest_tag.outputs.TAG_VERSION }}
