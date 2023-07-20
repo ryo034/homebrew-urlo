@@ -31,7 +31,6 @@ jobs:
       - name: Get Latest tag
         id: latest_tag
         run: |
-          git fetch --prune --unshallow
           TAG_VERSION=$(git describe --tags --abbrev=0)
           echo "TAG_VERSION=${TAG_VERSION#/v}" >> $GITHUB_OUTPUT
 
