@@ -208,3 +208,37 @@ func TestNewUrlMaps_Error(t *testing.T) {
 		})
 	}
 }
+
+func TestUrlMaps_Update(t *testing.T) {
+	googleURL, _ := url.Parse("https://www.google.com")
+	googleJPURL, _ := url.Parse("https://www.google.co.jp")
+	type fields struct {
+		values []UrlMap
+	}
+	type args struct {
+		value UrlMap
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   UrlMaps
+	}{
+		{
+			name:   "should return UrlMaps",
+			fields: fields{values: []UrlMap{{Title: "Google", URL: googleURL}}},
+			args:   args{value: UrlMap{Title: "Google", URL: googleJPURL}},
+			want:   UrlMaps{[]UrlMap{{Title: "Google", URL: googleJPURL}}},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			us := UrlMaps{
+				values: tt.fields.values,
+			}
+			if got := us.Update(tt.args.value); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Update() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

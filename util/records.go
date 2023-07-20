@@ -68,6 +68,15 @@ func (us UrlMaps) Delete(idx int) UrlMaps {
 	return UrlMaps{values: append(us.values[:idx], us.values[idx+1:]...)}
 }
 
+func (us UrlMaps) Update(value UrlMap) UrlMaps {
+	for i, u := range us.values {
+		if u.Title == value.Title {
+			us.values[i] = value
+		}
+	}
+	return us
+}
+
 func (us UrlMaps) IsAlreadyExist(title string) bool {
 	for _, item := range us.values {
 		if item.Title == title {

@@ -34,6 +34,14 @@ To add a new URL to the local Json file, use the add command:
 > urlo add google https://www.google.com
 ```
 
+#### Override the URL
+```shell
+> urlo add {title} {url} -o
+
+# Example
+> urlo add google https://www.google.co.jp -o
+```
+
 ### Bulk add URLs
 To add multiple URLs to the local Json file, use the add command:
 
