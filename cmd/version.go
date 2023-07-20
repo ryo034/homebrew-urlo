@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	Version = "development"
+	version = "development"
 )
 
 var versionCmd = &cobra.Command{
@@ -14,7 +14,7 @@ var versionCmd = &cobra.Command{
 	Short: "Print the version number of urlo",
 	Long:  `All software has versions. This is urlo's`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("urlo v" + Version)
+		fmt.Println("urlo v" + version)
 	},
 }
 
