@@ -21,10 +21,14 @@ jobs:
           go-version-file: "go.mod"
           cache: true
 
+      - name: Unwrap tag version
+        id: prep
+        run: echo "::set-output name=TAG_VERSION::${GITHUB_REF#refs/tags/v}"
+
       - uses: goreleaser/goreleaser-action@v4
         with:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAP_GITHUB_TOKEN: ${{ secrets.TAP_GITHUB_TOKEN }}
-          VERSION: ${{ GITHUB_REF#refs/tags/v }}
+          VERSION: ${{ steps.prep.outputs.TAG_VERSION }}
