@@ -30,18 +30,15 @@ func (c *Controller) Add(args []string, override bool) error {
 
 	t, err := domain.NewTitle(title)
 	if err != nil {
-		color.Red("Error: %s\n", err)
-		return nil
+		return err
 	}
 
 	u, err := domain.NewStrictUrlFromString(ur)
 	if err != nil {
-		color.Red("Error: %s\n", err)
-		return nil
+		return err
 	}
 	if err = c.interactor.Add(domain.NewUrlMap(t, u), override); err != nil {
-		color.Red("Error: %s\n", err)
-		return nil
+		return err
 	}
 	return nil
 }
@@ -65,26 +62,22 @@ func (c *Controller) BulkAdd(args []string) error {
 	for i, v := range newUrlMap {
 		t, err := domain.NewTitle(v.Title)
 		if err != nil {
-			color.Red("Error: %s\n", err)
-			return nil
+			return err
 		}
 		u, err := domain.NewStrictUrlFromString(v.URL)
 		if err != nil {
-			color.Red("Error: %s\n", err)
-			return nil
+			return err
 		}
 		result[i] = domain.NewUrlMap(t, u)
 	}
 
 	res, err := domain.NewUrlMaps(result)
 	if err != nil {
-		color.Red("Error: %s\n", err)
-		return nil
+		return err
 	}
 
 	if err := c.interactor.BulkAdd(res); err != nil {
-		color.Red("Error: %s\n", err)
-		return nil
+		return err
 	}
 	return nil
 }
@@ -95,8 +88,7 @@ func (c *Controller) List(jsonOutput bool, jsonStringOutput bool) error {
 		return nil
 	}
 	if err := c.interactor.List(jsonOutput, jsonStringOutput); err != nil {
-		color.Red("Error: %s\n", err)
-		return nil
+		return err
 	}
 	return nil
 }
@@ -114,25 +106,21 @@ func (c *Controller) Set(args []string) error {
 	for i, v := range newUrlMap {
 		t, err := domain.NewTitle(v.Title)
 		if err != nil {
-			color.Red("Error: %s\n", err)
-			return nil
+			return err
 		}
 		u, err := domain.NewStrictUrlFromString(v.URL)
 		if err != nil {
-			color.Red("Error: %s\n", err)
-			return nil
+			return err
 		}
 		vs[i] = domain.NewUrlMap(t, u)
 	}
 	result, err := domain.NewUrlMaps(vs)
 	if err != nil {
-		color.Red("Error: %s\n", err)
-		return nil
+		return err
 	}
 
 	if err := c.interactor.Set(result); err != nil {
-		color.Red("Error: %s\n", err)
-		return nil
+		return err
 	}
 	return nil
 }
@@ -141,12 +129,10 @@ func (c *Controller) Open(args []string) error {
 	title := args[0]
 	t, err := domain.NewTitle(title)
 	if err != nil {
-		color.Red("Error: %s\n", err)
-		return nil
+		return err
 	}
 	if err := c.interactor.Open(t); err != nil {
-		color.Red("Error: %s\n", err)
-		return nil
+		return err
 	}
 	return nil
 }
