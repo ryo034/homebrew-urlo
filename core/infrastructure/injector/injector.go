@@ -1,7 +1,7 @@
 package injector
 
 import (
-	driver2 "urlo/core/driver"
+	"urlo/core/driver"
 	"urlo/core/infrastructure"
 	"urlo/core/interface/controller"
 	"urlo/core/interface/gateway"
@@ -18,9 +18,9 @@ type injector struct {
 }
 
 func NewInjector(filePath string, cmdExecutor infrastructure.CommandExecutor, promptExecutor infrastructure.PromptExecutor) Injector {
-	driver := driver2.NewDriver(filePath, cmdExecutor, promptExecutor)
+	d := driver.NewDriver(filePath, cmdExecutor, promptExecutor)
 	adapter := gateway.NewGatewayAdapter()
-	gw := gateway.NewGateway(driver, adapter)
+	gw := gateway.NewGateway(d, adapter)
 	p := presenter.NewPresenter()
 	interactor := usecase.NewInteractor(gw, p)
 	return &injector{controller.NewController(interactor)}
