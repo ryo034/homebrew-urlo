@@ -1,64 +1,23 @@
 package cmd
 
 import (
-	"encoding/json"
-	"fmt"
-	"urlo/adapter"
-	"urlo/util"
-
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
+	"urlo/core/infrastructure/injector"
 )
 
-var setCmd = &cobra.Command{
-	Use:   "set",
-	Short: "Set a new URL map from JSON string",
-	Long:  `This command sets a new URL map from the provided JSON string.`,
-	Args:  cobra.ExactArgs(1),
-	RunE: func(cmd *cobra.Command, args []string) error {
-		var newUrlMap []util.UrlMapJson
-		if args[0] == "" {
-			return fmt.Errorf("JSON string is empty")
-		}
-		if err := json.Unmarshal([]byte(args[0]), &newUrlMap); err != nil {
-			return fmt.Errorf("failed to parse JSON string: %w", err)
-		}
-
-		if !util.Confirm("Are you sure you want to overwrite the existing data?") {
-			fmt.Println("Aborted")
-			return nil
-		}
-
-		if err := util.ClearRecords(); err != nil {
-			fmt.Println(err)
-			return nil
-		}
-
-		records, err := util.GetRecordsFromFile()
-		if err != nil {
-			fmt.Println(err)
-			return err
-		}
-
-		res, err := adapter.AdaptUrlMapJsonToUrlMaps(newUrlMap)
-		if err != nil {
-			return err
-		}
-		rs, err := records.AddAll(res)
-		if err != nil {
-			return err
-		}
-
-		err = util.WriteValuesToFile(rs)
-		if err != nil {
-			fmt.Println(err)
-			return nil
-		}
-
-		fmt.Println("Successfully set the new URL map.")
-		return nil
-	},
-}
-
-func init() {
-	rootCmd.AddCommand(setCmd)
+func newSetCmd(i injector.Injector) *cobra.Command {
+	setCmd := &cobra.Command{
+		Use:   "set",
+		Short: "Set a new URL map from JSON string",
+		Long:  `This command sets a new URL map from the provided JSON string.`,
+		Args:  cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			if err := i.Controller().Set(args); err != nil {
+				color.Red("Error: %s\n", err)
+				return
+			}
+		},
+	}
+	return setCmd
 }

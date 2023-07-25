@@ -46,7 +46,7 @@ To add a new URL to the local Json file, use the add command:
 To add multiple URLs to the local Json file, use the add command:
 
 ```shell
-> urlo bulk-add {json string}
+> urlo bulk-add {JsonString}
 ```
 
 ### List all URLs
@@ -130,13 +130,33 @@ One of the key features of our library is how it handles data. Rather than relyi
 This ensures that your data stays where it belongs: with you.
 With this approach, we prioritize your privacy and security, giving you full control over your data without compromising its accessibility.
 
-## Share your list
+## Share
 You can share your list with others by using the pbcopy command:
 
 ```shell
 > urlo list -s | pbcopy
 > urlo set -s "{set output json string}"
 ```
+
+### Setting Values Directly From a JSON File on GitHub
+With urlo set, it is possible to directly load a JSON string from a JSON file hosted on GitHub and set it.
+
+This allows easy and efficient management of your JSON data.
+
+To set values from a public JSON file on GitHub, you can use the following one-liner:
+
+```bash
+urlo set "$(curl -s https://raw.githubusercontent.com/username/repo/branch/path/to/file.json)"
+
+# Example
+urlo set "$(curl -s https://raw.githubusercontent.com/ryo034/homebrew-urlo/main/example/data/urls.json)"
+```
+For private repositories, you will need to authenticate with a GitHub personal access token:
+
+```bash
+urlo set "$(curl -s -u username:token https://raw.githubusercontent.com/username/repo/branch/path/to/file.json)"
+```
+Replace username with your GitHub username, token with your personal access token, and repo, branch, and path/to/file.json with the repository name, branch name, and path to your JSON file respectively.
 
 ## Maintenance and Support
 As an open-source tool, we greatly value and rely on our community. The feedback, questions, and involvement from users not only help us to constantly improve and develop, but also make this project more robust and user-friendly.

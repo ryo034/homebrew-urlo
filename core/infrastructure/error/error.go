@@ -1,12 +1,17 @@
-package util
+package error
 
 import (
 	"fmt"
 	"github.com/fatih/color"
 )
 
+type UrlMap struct {
+	Title string
+	URL   string
+}
+
 type DuplicatedUrlMaps struct {
-	Values UrlMaps
+	Values []UrlMap
 	Title  string
 }
 
@@ -25,8 +30,8 @@ func (e *DuplicationError) Error() string {
 	if len(e.Values) > 0 {
 		for _, dups := range e.Values {
 			color.Red("Error: The title '%s' is already used for the following URLs:\n", dups.Title)
-			for _, dup := range dups.Values.values {
-				color.Yellow(fmt.Sprintf("- %s\n", dup.URL.String()))
+			for _, dup := range dups.Values {
+				color.Yellow(fmt.Sprintf("- %s\n", dup.URL))
 			}
 		}
 	}
