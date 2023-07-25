@@ -29,7 +29,7 @@ func NewDriver(filePath string, cmdExecutor infrastructure.CommandExecutor, prom
 	return &driver{filePath, cmdExecutor, promptExecutor}
 }
 
-func (d *driver) getFile() (*os.File, error) {
+func (d *driver) getOrCreateFile() (*os.File, error) {
 	_, err := os.Stat(d.filePath)
 	if os.IsNotExist(err) {
 		f, err := os.Create(d.filePath)
@@ -47,7 +47,7 @@ func (d *driver) getFile() (*os.File, error) {
 
 func (d *driver) ReadRecords() ([]domain.UrlMapJson, error) {
 	var urlMaps []domain.UrlMapJson
-	f, err := d.getFile()
+	f, err := d.getOrCreateFile()
 	if err != nil {
 		return nil, fmt.Errorf("get file error: %v", err)
 	}
@@ -75,7 +75,7 @@ func (d *driver) Write(v domain.UrlMap) error {
 }
 
 func (d *driver) WriteAll(vs *domain.UrlMaps) error {
-	f, err := d.getFile()
+	f, err := d.getOrCreateFile()
 	if err != nil {
 		return fmt.Errorf("get file error: %v", err)
 	}
@@ -102,7 +102,7 @@ func (d *driver) WriteAll(vs *domain.UrlMaps) error {
 }
 
 func (d *driver) ClearRecords() error {
-	f, err := d.getFile()
+	f, err := d.getOrCreateFile()
 	if err != nil {
 		return fmt.Errorf("get file error: %v", err)
 	}

@@ -25,7 +25,6 @@ func newListCmd(i injector.Injector) *cobra.Command {
 				color.Red("Error: %s\n", err)
 				return
 			}
-			return
 		},
 	}
 	listCmd.Flags().BoolP("json", "j", false, "Output in JSON format")

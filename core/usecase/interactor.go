@@ -80,10 +80,6 @@ func (i *interactor) Update(vs *domain.UrlMaps) error {
 	return nil
 }
 
-func (i *interactor) Clear() error {
-	return i.Clear()
-}
-
 func (i *interactor) Set(vs *domain.UrlMaps) error {
 	ok, err := i.repo.AskOne("Are you sure you want to overwrite the existing data?")
 	if err != nil {

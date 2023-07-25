@@ -7,7 +7,6 @@ type InputPort interface {
 	Add(v domain.UrlMap, override bool) error
 	BulkAdd(vs *domain.UrlMaps) error
 	Update(vs *domain.UrlMaps) error
-	Clear() error
 	Set(vs *domain.UrlMaps) error
 	Open(t domain.Title) error
 	Select(query string) error
